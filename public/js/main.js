@@ -16,7 +16,7 @@ var interval = null;
 var inertia = -2.0;
 
 var output = [];
-
+var canvas_draw;
 function init(){
     /*document.getElementById('loadfile').addEventListener('change', function(e){
         document.getElementById('video').setAttribute('src', 'video/' + this.value.split('\\').pop());
@@ -24,7 +24,7 @@ function init(){
 
 var video_dom = document.querySelector('#video');
 var canvas_copy = document.querySelector('#canvas-copy-fancy');
-var canvas_draw = document.querySelector('#canvas-draw-fancy');
+    canvas_draw = document.querySelector('#canvas-draw-fancy');
 
     video_dom.addEventListener('canplay', function() {
       canvas_copy.width = canvas_draw.width = video_dom.videoWidth;
@@ -46,7 +46,7 @@ var canvas_draw = document.querySelector('#canvas-draw-fancy');
       if (interval == null) {
         interval = window.setInterval(function() { 
             processEffectFrame();
-            output = canvas_draw.toDataURL('image/png')
+            output.push(canvas_draw.toDataURL('image/png'));
         }, 33);
       }        
     }, false);
