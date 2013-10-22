@@ -1,7 +1,63 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     init();
+    tracksInit();
+    controlsInit();
 });
 
+
+function tracksInit(){
+      $('.track').rangeSlider({
+      arrows: false,
+      valueLabels:"hide",
+      bounds: {min: 10, max: 90},
+      defaultValues:{min: 10, max: 50},
+      range: {min: 11, max: 100},
+      wheelMode: "scroll",
+      wheelSpeed: 30,
+      scales: [
+        // Primary scale
+        {
+          first: function(val){ return val; },
+          next: function(val){ return val + 10; },
+          stop: function(val){ return false; },
+          label: function(val){ return val; },
+          format: function(tickContainer, tickStart, tickEnd){ 
+            tickContainer.addClass("myCustomClass");
+          }
+        },
+        // Secondary scale
+        {
+          first: function(val){ return val; },
+          next: function(val){
+            if (val % 10 === 9){
+              return val + 2;
+            }
+            return val + 1;
+          },
+          stop: function(val){ return false; },
+          label: function(){ return null; }
+        }]
+    }).draggable({ 
+      axis: 'x',
+      containment: '#track-container'
+    }).bind('valuesChanging', function(e, data){
+      console.log('Something moved. min: ' + data.values.min + ' max: ' + data.values.max);
+      $(this).find('.value-min').text(data.values.min.toFixed(2));
+      $(this).find('.value-max').text(data.values.max.toFixed(2));
+    })
+    //$('.track').trigger('valuesChanging');
+    $('.track .ui-rangeSlider-bar').append('<div class="value-min"></div><div class="value-max"></div>')
+
+    $('#track-container').sortable({ containment: '#track-container' });
+}
+function controlsInit(){
+  $('#play').click(function(){
+    document.getElementById('video').play();
+  });
+  $('#pause').click(function(){
+    document.getElementById('video').pause();
+  });
+}
 
 var draw_interval = null;
 var ctx_copy = null;

@@ -1,18 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<link rel="stylesheet" type="text/css" href="libs/jQRangeSlider-5.4.0/css/classic.css">
-<script type="text/javascript" src="libs/jquery-2.0.3.js"></script>
-<script type="text/javascript" src="libs/jQRangeSlider-5.4.0/jQEditRangeSlider-min.js1"></script>
-<script type="text/javascript" src="js/main.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="libs/jQRangeSlider-5.4.0/css/iThing.css">
+
+    <script type="text/javascript" src="libs/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="libs/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="libs/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="libs/jQRangeSlider-5.4.0/jQEditRangeSlider-min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
     <title></title>
 </head>
 <body>
-    <video id="video" name="media" src="video/movie_300.mp4">
-    </video>
-    <canvas id="canvas-copy-fancy"></canvas>
-    <canvas id="canvas-draw-fancy"></canvas>
-    <input type="file" id="loadfile">
+
+    <div id="wrapper">
+
+        <header id="header">
+            <strong>Header:</strong>
+        </header><!-- #header-->
+
+        <div id="content">
+            <video id="video" name="media" src="video/movie_300.mp4">
+            </video>
+            <canvas id="canvas-copy-fancy"></canvas>
+            <canvas id="canvas-draw-fancy"></canvas>
+            <input type="file" id="loadfile">
+            <div id="control-panel">
+                <button id="play">Play</button>
+                <button id="pause">Pause</button>
+            </div>
+            <div id="track-container">
+                <div class="track-block">
+                    <div class="track"></div>
+                </div>
+                <div class="track-block">
+                    <div class="track"></div>
+                </div>
+                <div class="track-block">
+                    <div class="track"></div>
+                </div>
+            </div>
+        </div><!-- #content-->
+
+    </div>
+
+    <footer id="footer">
+        <strong>Footer:</strong> 
+    </footer>
 </body>
 </html>
