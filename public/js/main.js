@@ -6,37 +6,37 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 function tracksInit(){
-      $('.track').rangeSlider({
-      arrows: false,
-      valueLabels:"hide",
-      bounds: {min: 10, max: 90},
-      defaultValues:{min: 10, max: 50},
-      range: {min: 11, max: 100},
-      wheelMode: "scroll",
-      wheelSpeed: 30,
-      scales: [
-        // Primary scale
-        {
-          first: function(val){ return val; },
-          next: function(val){ return val + 10; },
-          stop: function(val){ return false; },
-          label: function(val){ return val; },
-          format: function(tickContainer, tickStart, tickEnd){ 
-            tickContainer.addClass("myCustomClass");
-          }
-        },
-        // Secondary scale
-        {
-          first: function(val){ return val; },
-          next: function(val){
-            if (val % 10 === 9){
-              return val + 2;
-            }
-            return val + 1;
-          },
-          stop: function(val){ return false; },
-          label: function(){ return null; }
-        }]
+    $('.track').rangeSlider({
+          arrows: false,
+          valueLabels:"hide",
+          bounds: {min: 10, max: 90},
+          defaultValues:{min: 10, max: 50},
+          range: {min: 11, max: 100},
+          wheelMode: "scroll",
+          wheelSpeed: 30,
+          scales: [
+            // Primary scale
+            {
+              first: function(val){ return val; },
+              next: function(val){ return val + 10; },
+              stop: function(val){ return false; },
+              label: function(val){ return val; },
+              format: function(tickContainer, tickStart, tickEnd){ 
+                tickContainer.addClass("myCustomClass");
+              }
+            },
+            // Secondary scale
+            {
+              first: function(val){ return val; },
+              next: function(val){
+                if (val % 10 === 9){
+                  return val + 2;
+                }
+                return val + 1;
+              },
+              stop: function(val){ return false; },
+              label: function(){ return null; }
+            }]
     }).draggable({ 
       axis: 'x',
       containment: '#track-container'
@@ -74,9 +74,9 @@ var inertia = -2.0;
 var output = [];
 var canvas_draw;
 function init(){
-    /*document.getElementById('loadfile').addEventListener('change', function(e){
+    document.getElementById('loadfile').addEventListener('change', function(e){
         document.getElementById('video').setAttribute('src', 'video/' + this.value.split('\\').pop());
-    }, false);*/
+    }, false);
 
 var video_dom = document.querySelector('#video');
 var canvas_copy = document.querySelector('#canvas-copy-fancy');
@@ -102,7 +102,7 @@ var canvas_copy = document.querySelector('#canvas-copy-fancy');
       if (interval == null) {
         interval = window.setInterval(function() { 
             processEffectFrame();
-            output.push(canvas_draw.toDataURL('image/png'));
+            //output.push(canvas_draw.toDataURL('image/png'));
         }, 33);
       }        
     }, false);
