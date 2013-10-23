@@ -1,3 +1,17 @@
+#file { 
+    position:relative; top:0px; left:0px; 
+    padding:0px; margin:0px; 
+    text-align:right; 
+    background: URL(../img/add4.png) no-repeat; 
+    width:65px; height:20px; overflow:hidden; 
+}
+
+#file input { 
+    height:20px; 
+    position:absolute; right:0px; 
+    opacity: 0; filter: alpha(opacity=0); 
+}
+
 #track-container{
     position: relative;
     padding: 10px;
