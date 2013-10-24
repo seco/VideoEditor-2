@@ -1,3 +1,10 @@
+.video-source{
+    display: none;
+}
+.track-info{
+    position: absolute;
+    right: 10px;
+}
 #file { 
     position:relative; top:0px; left:0px; 
     padding:0px; margin:0px; 
@@ -22,6 +29,7 @@
 }
 .track{
     width:500px;
+    position: relative;
 }
 .value-min{
     top: 6px;
