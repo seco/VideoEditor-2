@@ -161,7 +161,7 @@ var TimeLine = {
         }).find('.ui-slider-handle').append('<div id="time-pointer"></div>');
 
         document.getElementById('file').addEventListener('change',  function handleFileSelect(evt) {
-            var file = evt.target.files[0]; // FileList object
+            var file = evt.target.files[0];
             TimeLine.add(new TimeLine.Track(file));
         }, false);
     }

@@ -5,6 +5,8 @@
     background: #FEF1C4;
     text-align: center;
     border-radius: 3px;
+    border: 2px solid #CFA34C;
+    box-shadow: 0px 0px 8px 0px #000
 }
 #video-output{
     display: block;
