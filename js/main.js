@@ -92,37 +92,36 @@ var TimeLine = {
     },
     playInterval: null,
     play: function(){
-        if (!this.playInterval){
-            $('#timeLine').slider('disable');
-            var canvas_output = document.querySelector('#video-output'),
-                videoDom = TimeLine.activeTrack().videoDom,
-                ctx_output = canvas_output.getContext('2d');
+        $('#timeLine').slider('disable');
+        var canvas_output = document.querySelector('#video-output'),
+            videoDom = TimeLine.activeTrack().videoDom,
+            ctx_output = canvas_output.getContext('2d');
 
-            ctx_output.fillRect(0, 0, 800, 600)
+        ctx_output.fillRect(0, 0, 800, 600)
 
-            videoDom.addEventListener('play', function() {
-                canvas_output.width = 800;//videoDom.videoWidth;
-                canvas_output.height = 600;//videoDom.videoHeight;
+        videoDom.addEventListener('play', function() {
+            canvas_output.width = 800;//videoDom.videoWidth;
+            canvas_output.height = 600;//videoDom.videoHeight;
 
-                videoDom.currentTime = TimeLine.position;
+            videoDom.currentTime = TimeLine.position;
+            if (!this.playInterval){
                 TimeLine.playInterval = setInterval(function(){
                     console.log('int')
                     ctx_output.drawImage(videoDom, 0 ,0, 800, 600);
                     TimeLine.position = TimeLine.position + 0.025;
                 }, 25);
-            });
+            }
+        });
 
-            /*setInterval(function(){
+        /*setInterval(function(){
 
-            }, 1000);*/
-            videoDom.play();
+        }, 1000);*/
+        videoDom.play();
 
-            /*videoDom.addEventListener('canplay', function() {
-                ctx_output.width = videoDom.videoWidth;
-                ctx_output = canvas_copy.getContext('2d');
-            }, false);*/
-
-        }
+        /*videoDom.addEventListener('canplay', function() {
+            ctx_output.width = videoDom.videoWidth;
+            ctx_output = canvas_copy.getContext('2d');
+        }, false);*/
     },
     pause: function(){
         if (this.playInterval) {
@@ -152,7 +151,13 @@ var TimeLine = {
             step: 0.025,
             min:0,
             max: 980,
-            change: function(e, ui){ TimeLine.position = ui.value }
+            change: function(e, ui){ 
+                TimeLine.position = ui.value;
+                $('#main-timer').text(Math.round(ui.value));
+            },
+            slide: function(e, ui){
+                $('#main-timer').text(Math.round(ui.value));
+            }
         }).find('.ui-slider-handle').append('<div id="time-pointer"></div>');
 
         document.getElementById('file').addEventListener('change',  function handleFileSelect(evt) {

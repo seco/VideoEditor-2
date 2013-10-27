@@ -1,3 +1,11 @@
+#main-timer{
+    width: 50px;
+    display: inline-block;
+    font-size: 15px;
+    background: #FEF1C4;
+    text-align: center;
+    border-radius: 3px;
+}
 #video-output{
     display: block;
     margin: 0 auto;
@@ -24,7 +32,7 @@
     background-color: #67707F;
 }
 #time-pointer{
-    background-color: red;
+    background-color: #D9421C;
     width: 3px;
     height: 67px;
     position: absolute;
@@ -64,8 +72,10 @@
 #track-container{
     position: relative;
     padding: 10px;
-    background-color: lightgreen;
+    background-color: #61BAB8;
     min-height: 74px;
+    border: solid #7F8E95;
+    border-width: 3px 0 3px 0;
 }
 .track-block{
     background: lightblue url(../img/up-down.png) 98.5% no-repeat;
@@ -92,7 +102,6 @@
 /* Middle
 -----------------------------------------------------------------------------*/
 #content {
-    padding: 0 0 100px;
 }
 
 /* Footer
@@ -175,6 +184,6 @@ input {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    background-color: darkgrey;
+    background-color: #186287;
 }
 /*----------------------------*/
