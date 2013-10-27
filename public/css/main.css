@@ -1,35 +1,81 @@
+#video-output{
+    display: block;
+    margin: 0 auto;
+    width: 800px;
+    height: 600px;
+    background: #000000;
+}
+.remove-track{
+    width: 14px;
+    height: 14px;
+    background: url('../img/cross.png') no-repeat;
+    position: absolute;
+    right:3px;
+    top:3px;
+    cursor: pointer;
+}
+.dragger{
+    width: 8px;
+    height: 16px;
+    position: absolute;
+    top: 19px;
+    right: -8px;
+    border-radius: 0 10px 10px 0;
+    background-color: #67707F;
+}
+#time-pointer{
+    background-color: red;
+    width: 3px;
+    height: 67px;
+    position: absolute;
+    left: 8px;
+    top:20px;
+}
 .video-source{
-    display: none;
+    *display: none;
+    width:100px;
+    height: 100px;
+    display:inline-block;
 }
 .track-info{
     position: absolute;
-    right: 10px;
+    right: 43px;
+    top: 16px;
 }
-#file { 
-    position:relative; top:0px; left:0px; 
-    padding:0px; margin:0px; 
-    text-align:right; 
-    background: URL(../img/add4.png) no-repeat; 
-    width:65px; height:20px; overflow:hidden; 
+#control-panel input{
+    color: #fefefe;
 }
-
-#file input { 
-    height:20px; 
-    position:absolute; right:0px; 
-    opacity: 0; filter: alpha(opacity=0); 
+#control-panel { 
+    border: 1px solid #000;
+    margin:10px;
+    position: relative;
+    background: #0b3e6f url(../img/ui-bg_diagonals-thick_15_0b3e6f_40x40.png) 50% 50% repeat;
+    border-radius: 5px;
 }
-
+#loader{
+    display: none;
+    position: absolute;
+    right: 7px;
+    top: 5px;
+}
+#loader.active{
+    display: inline;
+}
 #track-container{
     position: relative;
     padding: 10px;
+    background-color: lightgreen;
+    min-height: 74px;
 }
 .track-block{
-    background-color: lightblue;
+    background: lightblue url(../img/up-down.png) 98.5% no-repeat;
     margin: 5px 0 5px 0;
+    position: relative;
 }
 .track{
-    width:500px;
     position: relative;
+    z-index: 1;
+    left: 0;
 }
 .value-min{
     top: 6px;
@@ -42,14 +88,6 @@
     right: 5px;
     position: absolute;
     color: #fefefe;
-}
-video{
-    border: 3px solid #000000;
-}
-
-#header {
-    height: 150px;
-    background: #FFE680;
 }
 /* Middle
 -----------------------------------------------------------------------------*/
@@ -130,7 +168,6 @@ img {
     border: none;
 }
 input {
-    vertical-align: middle;
 }
 #wrapper {
     width: 1000px;

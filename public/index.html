@@ -3,6 +3,7 @@
 <head>
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.9.2.custom.css">
     <link rel="stylesheet" type="text/css" href="libs/jQRangeSlider-5.4.0/css/iThing.css">
 
     <script type="text/javascript" src="libs/jquery-1.7.1.min.js"></script>
@@ -16,48 +17,23 @@
 <body>
 
     <div id="wrapper">
-
-        <header id="header">
-            <strong>Header:</strong>
-        </header><!-- #header-->
-
         <div id="content">
-            <video id="video" name="media" src="video/movie_300.mp4">
-            </video>
-            <canvas id="canvas-copy-fancy"></canvas>
-            <canvas id="canvas-draw-fancy"></canvas>
-            <div id="file"><input type="file" multiple name="myFile" /></div>
-            <ul id="list">
-                
+            <canvas id="video-output"></canvas>
+            <ul id="files-list">
             </ul>
             <div id="control-panel">
-                <button id="play">Play</button>
-                <button id="pause">Pause</button>
-                <div>
-                    <input type="text" >
-                    <button id="add-video">Add video</button>
-                </div>
+                <button id="play" disabled>Play</button>
+                <button id="pause" disabled>Pause</button>
+                <input type="file" id="file" name="myFile" />
+                <img id="loader" src="img/ajax-loader.gif">
             </div>
             <div id="track-container">
-                <div id="timeline"></div>
+                <div id="timeLine"></div>
                 <div id="track-list">
-                    <div class="track-block">
-                        <div class="track"></div>
-                    </div>
-                    <div class="track-block">
-                        <div class="track"></div>
-                    </div>
-                    <div class="track-block">
-                        <div class="track"></div>
-                    </div>
                 </div>
             </div>
         </div><!-- #content-->
 
     </div>
-
-    <footer id="footer">
-        <strong>Footer:</strong> 
-    </footer>
 </body>
 </html>

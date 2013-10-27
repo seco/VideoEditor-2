@@ -1,191 +1,170 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     TimeLine.init();
-    //tracksInit();
-    //controlsInit();
 });
 
 var TimeLine = {
     /* Default API */
-    Track/*(source: file)*/: {
-        get offset(){ return 'offset:Number'; },
-        set offset(timeInSeconds /*number*/){ return 'set'; },
-        get duration(){ return 'duration:Number'; },
-        set duration(timeOnSeconds /*Number*/){ return 'duration'; }
-    },
-    get tracks(){ return 'Track[]' },
-    addTrack1: function(track){ },
-    removeTrack: function(track){ },
-    position1: 5,
-    get position(){ return this.position1; },
-    set position(timeInSeconds /*Number*/){ this.position1 = timeInSeconds },
+    Track: function(file){
 
-    play: function(){ },
-    pause: function(){ },
+        if (!file.type.match('video.*')){
+            console.warn('Only video files allowed');
+            return;
+        }
+
+        var that = this;
+        that.file = file;
+        that.name = file.name;
+        that.size = file.size;
+        that.type = file.type;
+    },
+    tracksList: [],
+    activeTrack: function(){ return TimeLine.tracks[0]; },
+    getActiveTrack: function(){
+        trackList.forEach(function(trk){
+            /*trk.offset 
+            Math.min.apply(null, [1,2,3])*/
+        });
+    },
+    add: function(track){
+        var reader = new FileReader();
+        console.log(track);
+        $('#loader').addClass('active');
+        reader.onload = (function(theFile) {
+            return function(e) {
+                var $video = $('<video class="video-source" src="' + e.target.result + '" title="' + escape(theFile.name) + '"></video>');
+                $video.appendTo('#files-list');
+
+                var $track = $('<div class="track-block"><div class="track"></div><span class="remove-track"></span></div>');
+                $track.append('<span class="track-info">'+ track.name +' | '+ (track.size/1000).toFixed(2)+'Kb'+'</span>')
+                $track.appendTo('#track-list');
+                track.elem = $track.get(0);
+                track.videoDom = $video.get(0);
+
+                track.videoDom.addEventListener('loadedmetadata', function(e){
+                    var maxDuration = Math.round(track.videoDom.duration);
+                    $('.track', $track).width(maxDuration);
+                    $('.track', $track).rangeSlider({
+                        arrows: false, valueLabels:'hide',
+                        bounds: { min: 0, max: maxDuration },
+                        defaultValues:{ min: 0, max: maxDuration },
+                        wheelMode: 'scroll', wheelSpeed: 30
+                    }).draggable({ 
+                        axis: 'x',
+                        containment: '#track-list'
+                    }).bind('valuesChanging valuesChanged', function(e, data){
+                        $(this).find('.value-min').text(Math.round(data.values.min));
+                        $(this).find('.value-max').text(Math.round(data.values.max));
+                    });
+
+                    $('.track .ui-rangeSlider-bar', $track).append('<div class="value-min">0</div><div class="value-max">'+ maxDuration +'</div>');
+                    $('.track', $track).append('<div class="dragger"></div>');
+                    $('.remove-track', $track).click(function(){
+                        TimeLine.remove(track);
+                    });
+                    $('#track-list').sortable('refresh');
+
+                    TimeLine.tracksList.push(track);
+                    if (TimeLine.tracksList.length>1) $('#time-pointer').height($('#time-pointer').height() + 55);
+                    if (TimeLine.tracksList.length>0) $('#play, #pause').removeAttr('disabled');
+                    $('#loader').removeClass('active');
+                }, false);
+            };
+        })(track.file);
+
+        reader.readAsDataURL(track.file);
+
+        return track;
+    },
+    remove: function(track){
+        if (TimeLine.tracksList.length>1) $('#time-pointer').height($('#time-pointer').height() - 55); 
+        else $('#play, #pause').attr('disabled', 'disabled');
+
+        var index = TimeLine.tracksList.indexOf(track);
+        $(track.elem, track.videoDom).remove();
+        TimeLine.tracksList.splice(index, 1);
+    },
+    get tracks(){ return this.tracksList; },
+    timeLinePosition: 0,
+    get position(){ return this.timeLinePosition; },
+    set position(timeInSeconds){ 
+        this.timeLinePosition = timeInSeconds; 
+        if ( $('#timeLine').slider('value') != timeInSeconds ) $('#timeLine').slider('value', timeInSeconds);
+    },
+    playInterval: null,
+    play: function(){
+        if (!this.playInterval){
+            $('#timeLine').slider('disable');
+            var canvas_output = document.querySelector('#video-output'),
+                videoDom = TimeLine.activeTrack().videoDom,
+                ctx_output = canvas_output.getContext('2d');
+
+            ctx_output.fillRect(0, 0, 800, 600)
+
+            videoDom.addEventListener('play', function() {
+                canvas_output.width = 800;//videoDom.videoWidth;
+                canvas_output.height = 600;//videoDom.videoHeight;
+
+                videoDom.currentTime = TimeLine.position;
+                TimeLine.playInterval = setInterval(function(){
+                    console.log('int')
+                    ctx_output.drawImage(videoDom, 0 ,0, 800, 600);
+                    TimeLine.position = TimeLine.position + 0.025;
+                }, 25);
+            });
+
+            /*setInterval(function(){
+
+            }, 1000);*/
+            videoDom.play();
+
+            /*videoDom.addEventListener('canplay', function() {
+                ctx_output.width = videoDom.videoWidth;
+                ctx_output = canvas_copy.getContext('2d');
+            }, false);*/
+
+        }
+    },
+    pause: function(){
+        if (this.playInterval) {
+            $('#timeLine').slider('enable');
+            clearInterval(this.playInterval);
+            this.playInterval = null;
+            TimeLine.tracks[0].videoDom.pause();
+        }
+    },
 
     get volume(){ return 'volume'},
     set volume(level /*: Number /*0..1*/){ console.log('set volume')},
     /*-------------------*/
     init: function(){
-        //TimeLine.tracksInit();
-
         $('#play').click(function(){
-            document.getElementById('video').play();
+            TimeLine.play();
         });
         $('#pause').click(function(){
-            document.getElementById('video').pause();
+            TimeLine.pause();
         });
         $('#add-video').click(function(){
             
         });
 
         $('#track-list').sortable({ containment: '#track-list' });
+        $('#timeLine').slider({
+            step: 0.025,
+            min:0,
+            max: 980,
+            change: function(e, ui){ TimeLine.position = ui.value }
+        }).find('.ui-slider-handle').append('<div id="time-pointer"></div>');
 
         document.getElementById('file').addEventListener('change',  function handleFileSelect(evt) {
-        var files = evt.target.files; // FileList object
-
-            // Loop through the FileList and render image files as thumbnails.
-            for (var i = 0, f; f = files[i]; i++) {
-                console.log(f)
-                TimeLine.addTrack(f);
-                // Only process video files.
-                if (!f.type.match('video.*')) continue;
-
-                var reader = new FileReader();
-
-                // Closure to capture the file information.
-                reader.onload = (function(theFile) {
-                    return function(e) {
-                        // Render thumbnail.
-                        var span = document.createElement('span');
-                        span.innerHTML = ['<video class="video-source" src="', e.target.result,
-                                        '" title="', escape(theFile.name), '"<video/>'].join('');
-                        document.getElementById('list').insertBefore(span, null);
-                    };
-                })(f);
-
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-            }
+            var file = evt.target.files[0]; // FileList object
+            TimeLine.add(new TimeLine.Track(file));
         }, false);
-
-        init();
-        function init(){
-            var draw_interval = null;
-            var ctx_copy = null;
-            var ctx_draw = null;
-
-            var offsets = [];
-            var inertias = [];
-            var slices = 4;
-            var out_padding = 100;
-            var interval = null;
-
-            var inertia = -2.0;
-
-            var output = [];
-            var canvas_draw;
-
-            var video_dom = document.querySelector('#video');
-            var canvas_copy = document.querySelector('#canvas-copy-fancy');
-            canvas_draw = document.querySelector('#canvas-draw-fancy');
-
-            video_dom.addEventListener('canplay', function() {
-                canvas_copy.width = canvas_draw.width = video_dom.videoWidth;
-                canvas_copy.height = video_dom.videoHeight;
-                canvas_draw.height = video_dom.videoHeight + out_padding;
-                ctx_copy = canvas_copy.getContext('2d');
-                ctx_draw = canvas_draw.getContext('2d');
-            }, false);
-
-
-            for (var i = 0; i < slices; i++) {
-                offsets[i] = 0;
-                inertias[i] = inertia;
-                inertia += 0.4;
-            }
-
-            video_dom.addEventListener('play', function() {
-                processEffectFrame();
-                if (interval == null) {
-                    interval = window.setInterval(function() { 
-                        processEffectFrame();
-                        //output.push(canvas_draw.toDataURL('image/png'));
-                    }, 33);
-                }        
-            }, false);
-
-            function processEffectFrame() {
-                var slice_width = video_dom.videoWidth / slices;
-                ctx_copy.drawImage(video_dom, 0 ,0);
-                ctx_draw.clearRect(0, 0,  canvas_draw.width, canvas_draw.height);
-                for (var i = 0; i < slices; i++) {
-                    var sx = i * slice_width;
-                    var sy = 0;
-                    var sw = slice_width;
-                    var sh = video_dom.videoHeight;
-                    var dx = sx;
-                    var dy = offsets[i] + sy + out_padding;
-                    var dw = sw;
-                    var dh = sh;
-                    ctx_draw.drawImage(canvas_copy, sx, sy, sw, sh, dx, dy, dw, dh);
-                    if (Math.abs(offsets[i] + inertias[i]) < out_padding) {
-                         inertias[i];
-                    } else {
-                        inertias[i] = -inertias[i];
-                    }
-                }
-            };
-
-            video_dom.addEventListener('pause', function() {
-                window.clearInterval(interval);
-                interval = null;
-            }, false);
-
-            video_dom.addEventListener('ended', function() {
-                clearInterval(interval);
-            }, false);
-        }
-    },
-    addTrack: function(){
-        var $track = $('<div class="track-block"><div class="track"></div><span id="track-info"></span></div>');
-        $track.appendTo('#track-list');
-        $('.track', $track).rangeSlider({
-            arrows: false, valueLabels:'hide',
-            bounds: { min: 10, max: 90 },
-            defaultValues:{ min: 10, max: 50 },
-            range: { min: 11, max: 100 },
-            wheelMode: 'scroll', wheelSpeed: 30,
-            scales: [
-                { // Primary scale
-                    first: function(val){ return val; },
-                    next: function(val){ return val + 10; },
-                    stop: function(val){ return false; },
-                    label: function(val){ return val; },
-                    format: function(tickContainer, tickStart, tickEnd){ 
-                        tickContainer.addClass('myCustomClass');
-                    }
-                },
-                { // Secondary scale
-                    first: function(val){ return val; },
-                    next: function(val){
-                        if (val % 10 === 9){
-                        return val + 2;
-                        }
-                        return val + 1;
-                    },
-                    stop: function(val){ return false; },
-                    label: function(){ return null; }
-                }
-            ]
-        }).draggable({ 
-            axis: 'x',
-            containment: '#track-list'
-        }).bind('valuesChanging', function(e, data){
-            $(this).find('.value-min').text(data.values.min.toFixed(2));
-            $(this).find('.value-max').text(data.values.max.toFixed(2));
-        });
-
-        $('.track .ui-rangeSlider-bar', $track).append('<div class="value-min"></div><div class="value-max"></div>');
-        $('#track-list').sortable('refresh');
     }
+}
+
+TimeLine.Track.prototype = {
+    get offset(){ return parseInt( $('.track', this.elem).css('left') ); },
+    set offset(timeInSeconds){ $('.track', this.elem).css('left', timeInSeconds); },
+    get duration(){ return Math.round( $('.track', this.elem).rangeSlider('values').max ); },
+    set duration(timeOnSeconds){ return $('.track', this.elem).rangeSlider('values', 0, timeOnSeconds )}
 }
